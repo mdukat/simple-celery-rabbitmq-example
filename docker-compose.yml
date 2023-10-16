@@ -1,0 +1,22 @@
+version: '3.3'
+services:
+    # https://hub.docker.com/_/rabbitmq
+    rabbitmq:
+        hostname: my-rabbit
+        container_name: some-rabbit
+        environment:
+            - RABBITMQ_DEFAULT_VHOST=my_vhost
+            - RABBITMQ_DEFAULT_USER=user
+            - RABBITMQ_DEFAULT_PASS=password
+        ports:
+            - '15672:15672'
+            - '5672:5672'
+        image: 'rabbitmq:3-management'
+    worker:
+        image: 'test-celery-worker'
+        build:
+            context: .
+            dockerfile: worker.Dockerfile
+        environment:
+            - RABBITMQ_BROKER_URL=some-rabbit
+
